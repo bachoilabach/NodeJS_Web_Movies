@@ -417,10 +417,26 @@ const getMovieByImdb = async () => {
 const getMovieByRelease = async () => {
 	try {
 		const movies = await db.movie.findAll({
-			order: [['release', 'DESC']], 
-			limit: 5, 
+			order: [['release', 'DESC']],
+			limit: 5,
 		});
 		return movies;
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+};
+
+const getMoviesByActorID = async (actorID) => {
+	try {
+		if(actorID){
+			let movies = await db.movieactor.findAll({
+				where: {
+					actorID: actorID
+				}
+			})
+			return movies
+		}
 	} catch (error) {
 		console.log(error);
 		throw error;
@@ -438,5 +454,6 @@ module.exports = {
 	getAllDirectorsMovie: getAllDirectorsMovie,
 	searchMovie: searchMovie,
 	countMovies: countMovies,
-	getMovieByRelease:getMovieByRelease
+	getMovieByRelease: getMovieByRelease,
+	getMoviesByActorID: getMoviesByActorID
 };

@@ -66,6 +66,8 @@ const initWebRoutes = (app) => {
 	router.get('/api/actor/get-all-actors', actorController.handleGetAllActors);
 
 
+	router.get('/api/movie/get-movies-actorID', movieController.handleGetMoviesbyActorID)
+
 	router.all('*', checkUserJWT, checkUserPermission);
 
 	// * User
