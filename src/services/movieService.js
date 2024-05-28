@@ -405,7 +405,8 @@ const getMovieByImdb = async () => {
 		let movies = '';
 		movies = await db.movie.findAll({
 			where: {
-				imdb: { [Op.gte]: 7.5 },
+				imdb: { [Op.gte]: 8 },
+				limit: 5
 			},
 		});
 		return movies;
