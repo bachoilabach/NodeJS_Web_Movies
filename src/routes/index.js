@@ -11,6 +11,7 @@ const router = express.Router();
 
 const initWebRoutes = (app) => {
 	router.post('/api/login', userController.handleLogin);
+	router.post('/api/user/create-new-user', userController.handleCreateNewUser);
 
 	router.get(
 		'/api/director/get-all-directors',
@@ -65,14 +66,15 @@ const initWebRoutes = (app) => {
 
 	router.get('/api/actor/get-all-actors', actorController.handleGetAllActors);
 
-
-	router.get('/api/movie/get-movies-actorID', movieController.handleGetMoviesbyActorID)
+	router.get(
+		'/api/movie/get-movies-actorID',
+		movieController.handleGetMoviesbyActorID
+	);
 
 	router.all('*', checkUserJWT, checkUserPermission);
 
 	// * User
 	router.get('/api/user/get-all-users', userController.handleGetAllUsers);
-	router.post('/api/user/create-new-user', userController.handleCreateNewUser);
 	router.put('/api/user/edit-user', userController.handleEditUser);
 	router.delete('/api/user/delete-user', userController.handleDeleteUser);
 	router.get('api/user-role', userController.handleGetAllUserRole);
