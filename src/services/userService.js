@@ -59,7 +59,7 @@ const url = (roleID)=>{
   if(roleID === 1){
     return `/dashboard/Home`
   }else{
-    return `/dashboard/Home`
+    return `/`
   }
 }
 
