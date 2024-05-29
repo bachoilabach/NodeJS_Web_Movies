@@ -78,12 +78,6 @@ const checkUserPermission = (req, res, next) => {
 				data: '',
 				errMessage: `You don't have permission to access`,
 			});
-		} else if (roleID === 2) {
-			return res.status(403).json({
-				errCode: -1,
-				data: '',
-				errMessage: `You don't have permission to access`,
-			});
 		} else {
 			next();
 		}

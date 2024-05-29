@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
             userID: DataTypes.INTEGER,
 			userName: DataTypes.STRING,
 			content: DataTypes.STRING,
-			commentDate: DataTypes.DATE
+			commentDate: DataTypes.DATEONLY
         },
 		{
 			sequelize,

@@ -35,14 +35,25 @@ const getUserNameByUserID = async (userID) => {
 	}
 };
 
+const getUserIDByEmail = async (email) => {
+	try {
+		const response = await db.user.findOne({
+			where: { email: email },
+			attributes: {
+				exclude: ['password'],
+			},
+		});
+		return response.userID
+	} catch (error) {
+		console.log(error);
+	}
+};
+
 const createComment = (data) => {
 	return new Promise(async (resolve, reject) => {
 		try {
-			const userID = await db.user.findOne({
-				where: {
-					userID: data.userID,
-				},
-			});
+			const userID = await getUserIDByEmail(data.email)
+			console.log(userID)
 			if (!userID) {
 				resolve({
 					errCode: 1,
@@ -51,8 +62,8 @@ const createComment = (data) => {
 			} else {
 				const createdComment = await db.comment.create({
 					movieID: data.movieID,
-					userID: data.userID,
-					userName:await getUserNameByUserID(data.userID),
+					userID: userID,
+					userName:await getUserNameByUserID(userID),
 					content: data.content,
 					commentDate: new Date()
 				});
