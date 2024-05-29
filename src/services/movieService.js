@@ -407,7 +407,6 @@ const getMovieByImdb = async () => {
 			where: {
 				imdb: { [Op.gte]: 7.5 },
 			},
-			limit: 5,
 		});
 		return movies;
 	} catch (error) {
