@@ -94,9 +94,7 @@ const handleGetAllMovieDirectors = async (req, res) => {
 const handleSearchMovie = async (req, res) => {
 	try {
 		const keyword = req.query.keyword;
-
 		const movie = await movieService.searchMovie(keyword);
-
 		return res.status(200).json({
 			errCode: 0,
 			movie,

@@ -71,6 +71,8 @@ const initWebRoutes = (app) => {
 		movieController.handleGetMoviesbyActorID
 	);
 
+	router.get('/api/movie/get-search-movie', movieController.handleSearchMovie);
+
 	router.all('*', checkUserJWT, checkUserPermission);
 
 	// * User
@@ -124,7 +126,6 @@ const initWebRoutes = (app) => {
 	);
 	router.put('/api/movie/edit-movie', movieController.handleEditMovie);
 	router.delete('/api/movie/delete-movie', movieController.handleDeleteMovie);
-	router.get('/api/movie/get-search-movie', movieController.handleSearchMovie);
 
 	// * Movie Count
 	router.get('/api/movies/count', movieController.handleGetMoviesCount);
