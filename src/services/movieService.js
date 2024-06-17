@@ -1,8 +1,8 @@
 import { Op, where } from 'sequelize';
 import db from '../models/index';
 
-const getAllMovies = (movieID) => {
-	return new Promise(async (resolve, reject) => {
+const getAllMovies = async (movieID) => {
+	
 		try {
 			let movies = '';
 			if (movieID === 'ALL') {
@@ -14,12 +14,11 @@ const getAllMovies = (movieID) => {
 				});
 			}
 
-			resolve(movies);
+			return movies
 		} catch (error) {
-			reject(error);
+			return (error);
 		}
-	});
-};
+	}
 
 const addGenreMovie = async (movieID, genreIDs) => {
 	try {
@@ -80,7 +79,7 @@ const addDirectorMovie = async (movieID, directorIDs) => {
 };
 
 const createNewMovie = async (data) => {
-	return new Promise(async (resolve, reject) => {
+	
 		try {
 			const movieData = data.movie;
 			const existingMovie = await db.movie.findOne({
@@ -88,10 +87,10 @@ const createNewMovie = async (data) => {
 			});
 			console.log(movieData);
 			if (existingMovie) {
-				resolve({
+				return {
 					errCode: 1,
 					ereMessage: 'Movie already exists',
-				});
+				}
 			} else {
 				const createdMovie = await db.movie.create({
 					title: movieData.title,
@@ -123,20 +122,19 @@ const createNewMovie = async (data) => {
 					movieData.directors
 				);
 
-				resolve({
+				return {
 					errCode: 0,
 					ereMessage: 'Create Movie Success',
 					createdMovie,
 					movieGenre,
 					movieActor,
 					movieDirector,
-				});
+				}
 			}
 		} catch (error) {
-			reject(error);
+			return (error);
 		}
-	});
-};
+	}
 
 const editGenreMovie = async (data) => {
 	try {
@@ -237,13 +235,13 @@ const editDirectorMovie = async (data) => {
 };
 
 const editMovie = async (data) => {
-	return new Promise(async (resolve, reject) => {
+	
 		try {
 			if (!data.movie.movieID) {
-				resolve({
+				return {
 					errCode: 2,
 					errMessage: 'Missing required parameters',
-				});
+				}
 			} else {
 				let movie = await db.movie.findOne({
 					where: { movieID: data.movie.movieID },
@@ -265,33 +263,32 @@ const editMovie = async (data) => {
 					await editActorMovie(data);
 					await editDirectorMovie(data);
 					await movie.save();
-					resolve({
+					return {
 						errCode: 0,
 						errMessage: 'Update Success',
-					});
+					}
 				} else {
-					resolve({
+					return {
 						errCode: 1,
 						errMessage: `Movie isn't found`,
-					});
+					}
 				}
 			}
 		} catch (error) {
-			reject(error);
+			return (error);
 		}
-	});
-};
+	}
 
-const deleteMovie = (movieID) => {
-	return new Promise(async (resolve, reject) => {
+const deleteMovie = async (movieID) => {
+	
 		let movie = await db.movie.findOne({
 			where: { movieID: movieID },
 		});
 		if (!movie) {
-			resolve({
+			return {
 				errCode: 2,
 				errMessage: `The movie isn't exist`,
-			});
+			}
 		}
 		await db.moviegenre.destroy({
 			where: { movieID: movieID },
@@ -305,15 +302,15 @@ const deleteMovie = (movieID) => {
 		await db.movie.destroy({
 			where: { movieID: movieID },
 		});
-		resolve({
+		return {
 			errCode: 0,
 			errMessage: 'Delete Success',
-		});
-	});
-};
+		}
+	}
 
-const getAllGenresMovie = (movieID) => {
-	return new Promise(async (resolve, reject) => {
+
+const getAllGenresMovie = async (movieID) => {
+	
 		try {
 			let moviegenres = '';
 			if (movieID === 'ALL') {
@@ -324,15 +321,15 @@ const getAllGenresMovie = (movieID) => {
 					where: { movieID: movieID },
 				});
 			}
-			resolve(moviegenres);
+			return moviegenres
 		} catch (error) {
-			reject(error);
+			return (error);
 		}
-	});
-};
+	}
 
-const getAllActorsMovie = (movieID) => {
-	return new Promise(async (resolve, reject) => {
+
+const getAllActorsMovie = async (movieID) => {
+	
 		try {
 			let movieactors = '';
 			if (movieID === 'ALL') {
@@ -343,15 +340,14 @@ const getAllActorsMovie = (movieID) => {
 					where: { movieID: movieID },
 				});
 			}
-			resolve(movieactors);
+			return movieactors
 		} catch (error) {
-			reject(error);
+			return (error);
 		}
-	});
-};
+	}
 
-const getAllDirectorsMovie = (movieID) => {
-	return new Promise(async (resolve, reject) => {
+const getAllDirectorsMovie = async (movieID) => {
+	
 		try {
 			let moviedirectors = '';
 			if (movieID === 'ALL') {
@@ -362,12 +358,11 @@ const getAllDirectorsMovie = (movieID) => {
 					where: { movieID: movieID },
 				});
 			}
-			resolve(moviedirectors);
+			return moviedirectors
 		} catch (error) {
-			reject(error);
+			return (error);
 		}
-	});
-};
+	}
 
 const searchMovie = async (keyword) => {
 	try {
@@ -429,13 +424,13 @@ const getMovieByRelease = async () => {
 
 const getMoviesByActorID = async (actorID) => {
 	try {
-		if(actorID){
+		if (actorID) {
 			let movies = await db.movieactor.findAll({
 				where: {
-					actorID: actorID
-				}
-			})
-			return movies
+					actorID: actorID,
+				},
+			});
+			return movies;
 		}
 	} catch (error) {
 		console.log(error);
@@ -455,5 +450,5 @@ module.exports = {
 	searchMovie: searchMovie,
 	countMovies: countMovies,
 	getMovieByRelease: getMovieByRelease,
-	getMoviesByActorID: getMoviesByActorID
+	getMoviesByActorID: getMoviesByActorID,
 };

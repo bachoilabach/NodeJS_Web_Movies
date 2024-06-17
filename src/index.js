@@ -8,33 +8,49 @@ import dotenv from 'dotenv';
 
 // Load environment variables from .env file based on NODE_ENV
 dotenv.config({
-	path: process.env.NODE_ENV === 'admin' ? '.env.admin' : '.env.user',
+    path: process.env.NODE_ENV === 'admin' ? '.env.admin' : '.env.user',
 });
 
-const app = express();
+const app1 = express();
+const app2 = express();
 
-// Set CORS options based on the REACT_URL environment variable
-const corsOptions = {
-	origin: process.env.REACT_URL,
-	credentials: true,
+// Set CORS options for the first app
+const corsOptions1 = {
+    origin: process.env.REACT_URL,
+    credentials: true,
 };
 
-app.use(cors(corsOptions));
+// Set CORS options for the second app
+const corsOptions2 = {
+    origin: process.env.REACT_URL1,
+    credentials: true,
+};
 
-// Config body-parser for handling large payloads
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
+// Common configurations for both apps
+const configureApp = (app, corsOptions) => {
+    app.use(cors(corsOptions));
+    app.use(bodyParser.json({ limit: '50mb' }));
+    app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
+    app.use(cookieParser());
+    viewEngine(app);
+    initWebRoutes(app);
+};
 
-// Config cookie-parser
-app.use(cookieParser());
+// Configure both apps
+configureApp(app1, corsOptions1);
+configureApp(app2, corsOptions2);
 
-// Setup view engine and routes
-viewEngine(app);
-initWebRoutes(app);
+// Get ports from environment variables
+const port1 = process.env.PORT || 8080;
+const port2 = process.env.PORT1 || 8081;
 
-const port = process.env.PORT || 3000;
+// Start both servers
+app1.listen(port1, () => {
+    console.log(`Server 1 is listening on port ${port1}`);
+    console.log(`React URL 1: ${process.env.REACT_URL}`);
+});
 
-app.listen(port, () => {
-	console.log(`Listening to port ${port}`);
-	console.log(`React URL: ${process.env.REACT_URL}`);
+app2.listen(port2, () => {
+    console.log(`Server 2 is listening on port ${port2}`);
+    console.log(`React URL 2: ${process.env.REACT_URL1}`);
 });
