@@ -73,6 +73,8 @@ const initWebRoutes = (app) => {
 
 	router.get('/api/movie/get-search-movie', movieController.handleSearchMovie);
 
+	
+
 	router.all('*', checkUserJWT, checkUserPermission);
 
 	// * User
@@ -136,6 +138,11 @@ const initWebRoutes = (app) => {
 		'/api/comment/create-new-comment',
 		commentController.handleCreateNewComment
 	);
+
+	// * Favourite
+	router.get('/api/favourite/favourite-movies', userController.handleGetFavouriteMoviesByUserID)
+	router.post('/api/favourite/add-favourite-movie',userController.handleAddFavouriteMovie)
+	router.delete('/api/favourite/delete-favourite-movie',userController.handleDeleteFavouriteMovie)
 
 	return app.use('/', router);
 };

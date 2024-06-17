@@ -1,4 +1,4 @@
-import { Op } from 'sequelize';
+import { Op, where } from 'sequelize';
 import db from '../models/index';
 import { createJWT } from '../middleware/JWTAction';
 require('dotenv').config();
@@ -46,13 +46,13 @@ const handleUserLogin = async (email, password) => {
 			userData.errCode = 1;
 			userData.errMessage = `Your's email isn't exist in your system.`;
 		}
-    console.log(userData)
+		console.log(userData);
 		return userData;
 	} catch (error) {
-		return(error);
+		return error;
 	}
 };
-const url =  (roleID) => {
+const url = (roleID) => {
 	if (roleID === 1) {
 		return `/dashboard/Home`;
 	} else {
@@ -71,7 +71,7 @@ const checkUserEmail = async (userEmail) => {
 			return false;
 		}
 	} catch (error) {
-		return (error);
+		return error;
 	}
 };
 const getAllUsers = async (userID) => {
@@ -95,7 +95,7 @@ const getAllUsers = async (userID) => {
 		// console.log(users);
 		return users;
 	} catch (error) {
-		return (error);
+		return error;
 	}
 };
 const createNewUser = async (data) => {
@@ -124,7 +124,7 @@ const createNewUser = async (data) => {
 		}
 	} catch (error) {
 		console.error('Error hashing password:', error);
-		return (error);
+		return error;
 	}
 };
 const hashUserPassword = async (Password) => {
@@ -132,7 +132,7 @@ const hashUserPassword = async (Password) => {
 		var hashPassword = bcrypt.hashSync(Password, salt);
 		return hashPassword;
 	} catch (error) {
-		return (error);
+		return error;
 	}
 };
 const deleteUser = async (userID) => {
@@ -187,7 +187,7 @@ const updateUserData = async (data) => {
 			}
 		}
 	} catch (error) {
-		return (error);
+		return error;
 	}
 };
 const getAllUserRole = async () => {};
@@ -231,6 +231,73 @@ const searchUser = async (keyword) => {
 const countUser = async () => {
 	return db.user.count();
 };
+
+const getUserIDByEmail = async (email) => {
+	try {
+		const user = await db.user.findOne({
+			where: { email: email },
+			attributes: {
+				exclude: ['password'],
+			},
+		});
+		return user.userID;
+	} catch (error) {
+		console.log(error);
+	}
+};
+
+const getFavouriteMoviesByEmail = async (email) => {
+	try {
+		const userID = await getUserIDByEmail(email);
+		let favourMovies = [];
+		favourMovies = await db.favourite.findAll({
+			where: {
+				userID: userID,
+			},
+		});
+		return favourMovies;
+	} catch (error) {
+		console.log(error);
+	}
+};
+
+const addFavouriteMovie = async (data) => {
+	try {
+		console.log(data);
+		const userID = await getUserIDByEmail(data.email);
+		await db.favourite.create({
+			userID: userID,
+			movieID: data.movieID,
+		});
+		return {
+			errCode: 0,
+			errMessage: 'Add favourite movie successfully',
+		};
+	} catch (error) {
+		console.log(error);
+	}
+};
+
+const deleteFavouriteMovie = async (data) => {
+    try {
+        const userID = await getUserIDByEmail(data.email);
+        console.log(userID);
+        await db.favourite.destroy({
+            where: {
+                userID: userID,
+                movieID: data.movieID,
+            },
+        });
+        console.log('Delete favourite movie successfully');
+        return {
+            errCode: 0,
+            errMessage: 'Delete favourite movie successfully',
+        };
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 module.exports = {
 	handleUserLogin: handleUserLogin,
 	getAllUsers: getAllUsers,
@@ -239,4 +306,7 @@ module.exports = {
 	deleteUser: deleteUser,
 	searchUser: searchUser,
 	countUser: countUser,
+	getFavouriteMoviesByEmail: getFavouriteMoviesByEmail,
+	addFavouriteMovie: addFavouriteMovie,
+	deleteFavouriteMovie: deleteFavouriteMovie,
 };
