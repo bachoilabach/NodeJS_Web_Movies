@@ -71,6 +71,10 @@ const initWebRoutes = (app) => {
 		movieController.handleGetMoviesbyActorID
 	);
 
+	router.get('/api/movie/get-search-movie', movieController.handleSearchMovie);
+
+	
+
 	router.all('*', checkUserJWT, checkUserPermission);
 
 	// * User
@@ -124,7 +128,6 @@ const initWebRoutes = (app) => {
 	);
 	router.put('/api/movie/edit-movie', movieController.handleEditMovie);
 	router.delete('/api/movie/delete-movie', movieController.handleDeleteMovie);
-	router.get('/api/movie/get-search-movie', movieController.handleSearchMovie);
 
 	// * Movie Count
 	router.get('/api/movies/count', movieController.handleGetMoviesCount);
@@ -135,6 +138,11 @@ const initWebRoutes = (app) => {
 		'/api/comment/create-new-comment',
 		commentController.handleCreateNewComment
 	);
+
+	// * Favourite
+	router.get('/api/favourite/favourite-movies', userController.handleGetFavouriteMoviesByUserID)
+	router.post('/api/favourite/add-favourite-movie',userController.handleAddFavouriteMovie)
+	router.delete('/api/favourite/delete-favourite-movie',userController.handleDeleteFavouriteMovie)
 
 	return app.use('/', router);
 };

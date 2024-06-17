@@ -116,6 +116,62 @@ const handleGetUserCount = async (req, res) => {
 	}
 };
 
+const handleGetFavouriteMoviesByUserID = async (req, res) => {
+	try {
+		let email = req.query.email;
+		console.log(email);
+
+		if (!email) {
+			return res.status(400).json({
+				errCode: 1,
+				errMessage: 'Email is required',
+			});
+		}
+
+		const favourMovies = await userService.getFavouriteMoviesByEmail(email);
+
+		return res.status(200).json({
+			errCode: 0,
+			errMessage: 'Get favourite movies successfully',
+			favourMovies,
+		});
+	} catch (error) {
+		console.error('Server Error', error);
+		return res.status(500).json({
+			errCode: 2,
+			errMessage: 'Server Error',
+		});
+	}
+};
+
+const handleAddFavouriteMovie = async (req, res) => {
+	try {
+		let data = req.body;
+		const message = await userService.addFavouriteMovie(data);
+		return res.status(200).json(message);
+	} catch (error) {
+		console.error('Server Error', error);
+		return res.status(500).json({
+			errCode: 2,
+			errMessage: 'Server Error',
+		});
+	}
+};
+
+const handleDeleteFavouriteMovie = async (req, res) => {
+    try {
+        let data = req.body;
+        const message = await userService.deleteFavouriteMovie(data);
+        return res.status(200).json(message);
+    } catch (error) {
+        console.error('Server Error', error);
+        return res.status(500).json({
+            errCode: 2,
+            errMessage: 'Server Error',
+        });
+    }
+};
+
 module.exports = {
 	handleLogin: handleLogin,
 	handleGetAllUsers: handleGetAllUsers,
@@ -125,4 +181,7 @@ module.exports = {
 	handleGetAllUserRole: handleGetAllUserRole,
 	handleSearchUser: handleSearchUser,
 	handleGetUserCount: handleGetUserCount,
+	handleGetFavouriteMoviesByUserID: handleGetFavouriteMoviesByUserID,
+	handleAddFavouriteMovie: handleAddFavouriteMovie,
+	handleDeleteFavouriteMovie: handleDeleteFavouriteMovie,
 };

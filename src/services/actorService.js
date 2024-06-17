@@ -1,8 +1,7 @@
 import { Op, where } from 'sequelize';
 import db from '../models/index';
 
-const getAllActors = (actorID) => {
-	return new Promise(async (resolve, reject) => {
+const getAllActors = async (actorID) => {
 		try {
 			let actors = '';
 			if (actorID === 'ALL') {
@@ -13,25 +12,24 @@ const getAllActors = (actorID) => {
 					where: { actorID: actorID },
 				});
 			}
-			resolve(actors);
+			return actors
 		} catch (error) {
-			reject(error);
+			return (error);
 		}
-	});
-};
+	}
 
-const createNewActor = (data) => {
-	return new Promise(async (resolve, reject) => {
+const createNewActor = async (data) => {
+	
 		try {
 			const existingActor = await db.actor.findOne({
 				where: { name: data.actor.name },
 			});
 			console.log(data.actor);
 			if (existingActor) {
-				resolve({
+				return {
 					errCode: 1,
 					ereMessage: 'Actor already exists',
-				});
+				}
 			} else {
 				const createdActor = await db.actor.create({
 					name: data.actor.name,
@@ -40,27 +38,26 @@ const createNewActor = (data) => {
 					biography: data.actor.biography,
 					image: data.actor.image,
 				});
-				resolve({
+				return {
 					errCode: 0,
 					ereMessage: 'Create Actor Success',
 					createdActor,
-				});
+				}
 			}
 		} catch (error) {
-			reject(error);
+			return (error);
 		}
-	});
-};
+	}
 
 const editActor = async (data) => {
-	return new Promise(async (resolve, reject) => {
+	
 		try {
 			console.log(data.actor.image);
 			if (!data.actor.actorID) {
-				resolve({
+				return {
 					errCode: 2,
 					errMessage: 'Missing required parameters',
-				});
+				}
 			} else {
 				let actor = await db.actor.findOne({
 					where: { actorID: data.actor.actorID },
@@ -74,43 +71,41 @@ const editActor = async (data) => {
 					actor.biography = data.actor.biography;
 					actor.image = data.actor.image;
 					await actor.save();
-					resolve({
+					return {
 						errCode: 0,
 						errMessage: 'Update Success',
-					});
+					}
 				} else {
-					resolve({
+					return {
 						errCode: 1,
 						errMessage: `Actor isn't found`,
-					});
+					}
 				}
 			}
 		} catch (error) {
-			reject(error);
+			return (error);
 		}
-	});
-};
+	}
 
-const deleteActor = (actorID) => {
-	return new Promise(async (resolve, reject) => {
+const deleteActor = async (actorID) => {
+	
 		let actor = await db.actor.findOne({
 			where: { actorID: actorID },
 		});
 		if (!actor) {
-			resolve({
+			return {
 				errCode: 2,
 				errMessage: `The Actor isn't exist`,
-			});
+			}
 		}
 		await db.actor.destroy({
 			where: { actorID: actorID },
 		});
-		resolve({
+		return {
 			errCode: 0,
 			errMessage: 'Delete Success',
-		});
-	});
-};
+		}
+	}
 
 const searchActor = async (keyword) => {
 	try {
