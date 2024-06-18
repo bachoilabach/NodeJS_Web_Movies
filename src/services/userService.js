@@ -263,7 +263,6 @@ const getFavouriteMoviesByEmail = async (email) => {
 
 const addFavouriteMovie = async (data) => {
 	try {
-		console.log(data);
 		const userID = await getUserIDByEmail(data.email);
 		await db.favourite.create({
 			userID: userID,
@@ -281,7 +280,6 @@ const addFavouriteMovie = async (data) => {
 const deleteFavouriteMovie = async (data) => {
     try {
         const userID = await getUserIDByEmail(data.email);
-        console.log(userID);
         await db.favourite.destroy({
             where: {
                 userID: userID,
