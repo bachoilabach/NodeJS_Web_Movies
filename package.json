@@ -24,6 +24,7 @@
   "homepage": "https://github.com/bachoilabach/NodeJS_Web_Movies#readme",
   "dependencies": {
     "babel": "^6.23.0",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -31,6 +32,7 @@
     "dotenv": "^16.3.1",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.7.1",
     "nodemon": "^3.0.2"
   },
