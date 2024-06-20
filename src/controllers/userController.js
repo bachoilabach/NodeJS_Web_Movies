@@ -128,13 +128,9 @@ const handleGetFavouriteMoviesByUserID = async (req, res) => {
 			});
 		}
 
-		const favourMovies = await userService.getFavouriteMoviesByEmail(email);
+		const message = await userService.getFavouriteMoviesByEmail(email);
 
-		return res.status(200).json({
-			errCode: 0,
-			errMessage: 'Get favourite movies successfully',
-			favourMovies,
-		});
+		return res.status(200).json(message);
 	} catch (error) {
 		console.error('Server Error', error);
 		return res.status(500).json({
@@ -159,17 +155,17 @@ const handleAddFavouriteMovie = async (req, res) => {
 };
 
 const handleDeleteFavouriteMovie = async (req, res) => {
-    try {
-        let data = req.body;
-        const message = await userService.deleteFavouriteMovie(data);
-        return res.status(200).json(message);
-    } catch (error) {
-        console.error('Server Error', error);
-        return res.status(500).json({
-            errCode: 2,
-            errMessage: 'Server Error',
-        });
-    }
+	try {
+		let data = req.body;
+		const message = await userService.deleteFavouriteMovie(data);
+		return res.status(200).json(message);
+	} catch (error) {
+		console.error('Server Error', error);
+		return res.status(500).json({
+			errCode: 2,
+			errMessage: 'Server Error',
+		});
+	}
 };
 
 module.exports = {
