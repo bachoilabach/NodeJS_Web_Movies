@@ -1,6 +1,7 @@
 import { Op, where } from 'sequelize';
 import db from '../models/index';
 import { createJWT } from '../middleware/JWTAction';
+import { getAllMovies } from './movieService';
 require('dotenv').config();
 
 const bcrypt = require('bcryptjs');
@@ -255,7 +256,22 @@ const getFavouriteMoviesByEmail = async (email) => {
 				userID: userID,
 			},
 		});
-		return favourMovies;
+
+		const favourMoviesDetail = await Promise.all(
+			favourMovies.map(async (movie) => {
+				const listMovies = await getAllMovies(movie.movieID);
+				return {
+					...listMovies,
+				};
+			})
+		);
+
+		return {
+			errCode: 0,
+			errMessage: 'Get favourite movies success',
+			favourMovies,
+			favourMoviesDetail,
+		};
 	} catch (error) {
 		console.log(error);
 	}
@@ -278,22 +294,22 @@ const addFavouriteMovie = async (data) => {
 };
 
 const deleteFavouriteMovie = async (data) => {
-    try {
-        const userID = await getUserIDByEmail(data.email);
-        await db.favourite.destroy({
-            where: {
-                userID: userID,
-                movieID: data.movieID,
-            },
-        });
-        console.log('Delete favourite movie successfully');
-        return {
-            errCode: 0,
-            errMessage: 'Delete favourite movie successfully',
-        };
-    } catch (error) {
-        console.log(error);
-    }
+	try {
+		const userID = await getUserIDByEmail(data.email);
+		await db.favourite.destroy({
+			where: {
+				userID: userID,
+				movieID: data.movieID,
+			},
+		});
+		console.log('Delete favourite movie successfully');
+		return {
+			errCode: 0,
+			errMessage: 'Delete favourite movie successfully',
+		};
+	} catch (error) {
+		console.log(error);
+	}
 };
 
 module.exports = {
