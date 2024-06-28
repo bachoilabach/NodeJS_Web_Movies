@@ -134,10 +134,14 @@ const initWebRoutes = (app) => {
 
 	// * Comment
 
+	router.get('/api/comment/count-comment',commentController.handleCountComment)
+
 	router.post(
 		'/api/comment/create-new-comment',
 		commentController.handleCreateNewComment
 	);
+
+	router.delete('/api/comment/delete-comment',commentController.hanldeDeleteComment)
 
 	// * Favourite
 	router.get('/api/favourite/favourite-movies', userController.handleGetFavouriteMoviesByUserID)
