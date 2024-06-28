@@ -88,8 +88,41 @@ const getCommentByMovieID = async (movieID) => {
 	}
 };
 
+const deleteComment = async(commentID)=>{
+	try {
+		let comment = await db.comment.findOne({
+			where: {
+				commentID: commentID
+			}
+		})
+		if(!comment){
+			return {
+				errCode: 2,
+				errMessage: `The comment isn't exist`
+			}
+		}
+		await db.comment.destroy({
+			where: {
+				commentID: commentID
+			}
+		})
+		return {
+			errCode: 0,
+			errMessage: 'Delete Comment success'
+		}
+	} catch (error) {
+		return(error)
+	}
+}
+
+const countComment = async ()=>{
+	return await db.comment.count()
+}
+
 module.exports = {
 	getAllComments: getAllComments,
 	createComment: createComment,
 	getCommentByMovieID: getCommentByMovieID,
+	countComment: countComment,
+	deleteComment: deleteComment
 };
